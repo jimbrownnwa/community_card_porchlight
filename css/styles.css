@@ -705,6 +705,11 @@ section {
     color: white;
 }
 
+.exclusivity strong {
+    color: var(--color-gold);
+    font-weight: 700;
+}
+
 .exclusivity-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
