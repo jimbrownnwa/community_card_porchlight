@@ -39,6 +39,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize scroll animations
     initScrollAnimations();
+
+    // Initialize mobile menu
+    initMobileMenu();
 });
 
 // Populate Categories Grid
@@ -379,6 +382,59 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Mobile Menu Toggle
+function initMobileMenu() {
+    const hamburger = document.getElementById('hamburgerBtn');
+    const navLinks = document.getElementById('navLinks');
+    const body = document.body;
+
+    if (!hamburger || !navLinks) return;
+
+    // Toggle menu when hamburger is clicked
+    hamburger.addEventListener('click', function() {
+        toggleMenu();
+    });
+
+    // Close menu when a nav link is clicked
+    const navItems = navLinks.querySelectorAll('.nav-link, .btn');
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            if (window.innerWidth <= 767) {
+                closeMenu();
+            }
+        });
+    });
+
+    // Close menu when clicking outside (on overlay)
+    document.addEventListener('click', function(e) {
+        const isClickInsideMenu = navLinks.contains(e.target);
+        const isClickOnHamburger = hamburger.contains(e.target);
+
+        if (!isClickInsideMenu && !isClickOnHamburger && navLinks.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+
+    // Close menu on window resize if viewport becomes desktop-sized
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 767 && navLinks.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+
+    function toggleMenu() {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        body.classList.toggle('menu-open');
+    }
+
+    function closeMenu() {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        body.classList.remove('menu-open');
+    }
+}
 
 // Parallax Effect on Hero (subtle)
 window.addEventListener('scroll', function() {
