@@ -246,19 +246,38 @@ function validateForm(formData) {
 }
 
 // Handle Form Submission
-function handleFormSubmission(formData) {
-    // In a real implementation, you would send this data to a server
-    // For now, we'll log it and show a success message
+async function handleFormSubmission(formData) {
+    const webhookUrl = 'https://flows.nwaboost.com/webhook-test/b863f11b-63f7-4cf3-8e8e-643bb54d6b6a';
 
     console.log('Form Submission:', formData);
 
-    // Store in localStorage as a simple backup (for demo purposes)
+    // Store in localStorage as a backup
     try {
         const existingSubmissions = JSON.parse(localStorage.getItem('porchLightSubmissions') || '[]');
         existingSubmissions.push(formData);
         localStorage.setItem('porchLightSubmissions', JSON.stringify(existingSubmissions));
     } catch (error) {
         console.error('Error storing form data:', error);
+    }
+
+    // Send data to webhook
+    try {
+        const response = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Webhook request failed: ${response.status}`);
+        }
+
+        console.log('Webhook call successful');
+    } catch (error) {
+        console.error('Error sending to webhook:', error);
+        // Continue to show success message even if webhook fails
     }
 
     // Hide form and show success message with animation
